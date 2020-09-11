@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "c:\\91APP\\DesignPattern\\DesignPattern.csproj": {}
+    "C:\\91APP\\DesignPattern\\DesignPattern.csproj": {}
   },
   "projects": {
-    "c:\\91APP\\DesignPattern\\DesignPattern.csproj": {
+    "C:\\91APP\\DesignPattern\\DesignPattern.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\91APP\\DesignPattern\\DesignPattern.csproj",
+        "projectUniqueName": "C:\\91APP\\DesignPattern\\DesignPattern.csproj",
         "projectName": "DesignPattern",
-        "projectPath": "c:\\91APP\\DesignPattern\\DesignPattern.csproj",
+        "projectPath": "C:\\91APP\\DesignPattern\\DesignPattern.csproj",
         "packagesPath": "C:\\Users\\Steven Su\\.nuget\\packages\\",
-        "outputPath": "c:\\91APP\\DesignPattern\\obj\\",
+        "outputPath": "C:\\91APP\\DesignPattern\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "c:\\91APP\\NuGet.Config",
+          "C:\\91APP\\NuGet.Config",
           "C:\\Users\\Steven Su\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -55,6 +55,9 @@
           "assetTargetFallback": true,
           "warn": true,
           "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
