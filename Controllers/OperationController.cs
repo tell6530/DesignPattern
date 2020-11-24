@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DesignPattern.Controllers
 {
     [ApiController]
+    [Route("[controller]/[action]")]
     public class OperationController : ControllerBase
     {
         [HttpPost]
