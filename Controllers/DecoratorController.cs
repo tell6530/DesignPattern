@@ -8,13 +8,13 @@ namespace DesignPattern.Controllers
 {
     [ApiController]
     [Route("[controller]/[action]")]
-    public class FileController : ControllerBase
+    public class DecoratorController : ControllerBase
     {
         [HttpPost]
         public IActionResult ZipFile(FileRequestEntity fileRequestEntity)
         {
             //設置初始化的被裝飾者
-            DecorateFactory factory = new DecorateFactory(new FileProcess());
+            DecoratorFactory factory = new DecoratorFactory(new FileProcess());
 
             //設置裝飾的順序
             factory.SetProcess(new ZipProcess() { FileName = "1.txt", PassWord = "1234567" });
@@ -34,7 +34,7 @@ namespace DesignPattern.Controllers
         public IActionResult AESCrypFile(FileRequestEntity fileRequestEntity)
         {
             //設置初始化的被裝飾者
-            DecorateFactory factory = new DecorateFactory(new FileProcess());
+            DecoratorFactory factory = new DecoratorFactory(new FileProcess());
 
             //設置裝飾的順序
             factory.SetProcess(new AESCrypProcess());
@@ -54,7 +54,7 @@ namespace DesignPattern.Controllers
         public IActionResult AESCrypAndZipFile(FileRequestEntity fileRequestEntity)
         {
             //設置初始化的被裝飾者
-            DecorateFactory factory = new DecorateFactory(new FileProcess());
+            DecoratorFactory factory = new DecoratorFactory(new FileProcess());
 
             //設置裝飾的順序
             factory.SetProcess(new AESCrypProcess())

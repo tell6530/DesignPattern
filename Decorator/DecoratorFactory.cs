@@ -1,15 +1,15 @@
 ﻿namespace DesignPattern.Decorator
 {
-    public class DecorateFactory
+    public class DecoratorFactory
     {
         IProcess _original;
 
-        public DecorateFactory(IProcess original)
+        public DecoratorFactory(IProcess original)
         {
             _original = original;
         }
 
-        public DecorateFactory SetProcess(ProcessBase process)
+        public DecoratorFactory SetProcess(ProcessBase process)
         {
             process.SetDecorated(_original);
             _original = process;
