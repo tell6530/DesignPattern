@@ -11,18 +11,19 @@ namespace DesignPattern.Decorator
     public class ZipProcess : ProcessBase
     {
         public string PassWord { get; set; }
+
         public string FileName { get; set; }
+
+        public override void Write(string writePath, byte[] buffer)
+        {
+            byte[] outputBytes = ZipWriter(buffer);
+            _process.Write(writePath, outputBytes);
+        }
 
         public override byte[] Read(string path)
         {
             byte[] buffer = _process.Read(path);
             return ZipReader(path, buffer);
-        }
-
-        public override void Write(string writePath, byte[] data)
-        {
-            byte[] buffer = ZipWriter(data);
-            _process.Write(writePath, buffer);
         }
 
         private byte[] ZipWriter(byte[] buffer)
@@ -31,7 +32,7 @@ namespace DesignPattern.Decorator
             using (ZipOutputStream zipStream = new ZipOutputStream(outputMemStream))
             using (MemoryStream memStreamIn = new MemoryStream(buffer))
             {
-                //zipStream.SetLevel(9);
+                zipStream.SetLevel(9);
 
                 ZipEntry newEntry = new ZipEntry(FileName);
                 newEntry.DateTime = DateTime.Now;
@@ -48,11 +49,6 @@ namespace DesignPattern.Decorator
             }
         }
 
-        /// <summary>
-        /// 讀取zip檔
-        /// </summary>
-        /// <param name="buffer">zip檔案byte</param>
-        /// <returns></returns>
         private byte[] ZipReader(string filePath, byte[] buffer)
         {
             byte[] zipBuffer = default(byte[]);

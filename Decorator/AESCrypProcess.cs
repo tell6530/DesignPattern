@@ -18,41 +18,16 @@ namespace DesignPattern.Decorator
             aes.IV = Encoding.UTF8.GetBytes(AESIV);
         }
 
+        public override void Write(string path, byte[] buffer)
+        {
+            byte[] outputBytes = EncryptData(buffer);
+            _process.Write(path, outputBytes);
+        }
+
         public override byte[] Read(string path)
         {
             byte[] encryptBytes = _process.Read(path);
             return DecryptData(encryptBytes);
-        }
-
-        /// <summary>
-        /// 進行解密
-        /// </summary>
-        /// <param name="encryptBytes"></param>
-        /// <returns></returns>
-        private byte[] DecryptData(byte[] encryptBytes)
-        {
-            byte[] outputBytes = null;
-            using (MemoryStream memoryStream = new MemoryStream(encryptBytes))
-            {
-                using (CryptoStream decryptStream = new CryptoStream(memoryStream, aes.CreateDecryptor(), CryptoStreamMode.Read))
-                {
-                    MemoryStream outputStream = new MemoryStream();
-                    decryptStream.CopyTo(outputStream);
-                    outputBytes = outputStream.ToArray();
-                }
-            }
-            return outputBytes;
-        }
-
-        /// <summary>
-        /// 裝飾者呼叫方法
-        /// </summary>
-        /// <param name="path"></param>
-        /// <param name="data"></param>
-        public override void Write(string path, byte[] data)
-        {
-            byte[] outputBytes = EncryptData(data);
-            _process.Write(path, outputBytes);
         }
 
         private byte[] EncryptData(byte[] data)
@@ -69,6 +44,21 @@ namespace DesignPattern.Decorator
                 }
             }
 
+            return outputBytes;
+        }
+
+        private byte[] DecryptData(byte[] encryptBytes)
+        {
+            byte[] outputBytes = null;
+            using (MemoryStream memoryStream = new MemoryStream(encryptBytes))
+            {
+                using (CryptoStream decryptStream = new CryptoStream(memoryStream, aes.CreateDecryptor(), CryptoStreamMode.Read))
+                {
+                    MemoryStream outputStream = new MemoryStream();
+                    decryptStream.CopyTo(outputStream);
+                    outputBytes = outputStream.ToArray();
+                }
+            }
             return outputBytes;
         }
     }

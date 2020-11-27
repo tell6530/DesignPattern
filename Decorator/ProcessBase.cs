@@ -7,9 +7,9 @@
         /// </summary>
         protected IProcess _process;
 
-        public abstract byte[] Read(string path);
-
         public abstract void Write(string writePath, byte[] buffer);
+
+        public abstract byte[] Read(string path);
 
         public virtual void SetDecorated(IProcess process)
         {

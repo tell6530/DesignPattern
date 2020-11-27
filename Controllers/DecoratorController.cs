@@ -57,8 +57,8 @@ namespace DesignPattern.Controllers
             DecoratorFactory factory = new DecoratorFactory(new FileProcess());
 
             //設置裝飾的順序
-            factory.SetProcess(new AESCrypProcess())
-                   .SetProcess(new ZipProcess() { FileName = "1.txt", PassWord = "1234567" });
+            factory.SetProcess(new ZipProcess() { FileName = "1.txt", PassWord = "1234567" })
+                   .SetProcess(new AESCrypProcess());
 
             IProcess process = factory.GetProcess();
 
