@@ -4,14 +4,9 @@ namespace DesignPattern.Decorator
 {
     public class FileProcess : IProcess
     {
-        public void Write(string writePath, byte[] buffer)
+        public void Write(string writePath, string content)
         {
-            File.WriteAllBytes(writePath, buffer);
-        }
-
-        public byte[] Read(string path)
-        {
-            return File.ReadAllBytes(path);
+            File.WriteAllText(writePath, content);
         }
     }
 }

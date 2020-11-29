@@ -1,6 +1,4 @@
-﻿using System;
-using System.Text;
-using DesignPattern.BE.File;
+﻿using DesignPattern.BE.File;
 using DesignPattern.Decorator;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,15 +15,11 @@ namespace DesignPattern.Controllers
             DecoratorFactory factory = new DecoratorFactory(new FileProcess());
 
             //設置裝飾的順序
-            factory.SetProcess(new ZipProcess() { FileName = "1.txt", PassWord = "1234567" });
+            factory.SetProcess(new ZipProcess() { ZipFileName = "1.txt", PassWord = "1234567" });
 
             IProcess process = factory.GetProcess();
 
-            byte[] data_buffer = Encoding.UTF8.GetBytes(fileRequestEntity.Content);
-            process.Write(fileRequestEntity.FilePath, data_buffer);
-
-            byte[] buffer = process.Read(fileRequestEntity.FilePath);
-            Console.WriteLine(Encoding.UTF8.GetString(buffer));
+            process.Write(fileRequestEntity.FilePath, fileRequestEntity.Content);
 
             return this.Ok();
         }
@@ -41,11 +35,7 @@ namespace DesignPattern.Controllers
 
             IProcess process = factory.GetProcess();
 
-            byte[] data_buffer = Encoding.UTF8.GetBytes(fileRequestEntity.Content);
-            process.Write(fileRequestEntity.FilePath, data_buffer);
-
-            byte[] buffer = process.Read(fileRequestEntity.FilePath);
-            Console.WriteLine(Encoding.UTF8.GetString(buffer));
+            process.Write(fileRequestEntity.FilePath, fileRequestEntity.Content);
 
             return this.Ok();
         }
@@ -57,16 +47,12 @@ namespace DesignPattern.Controllers
             DecoratorFactory factory = new DecoratorFactory(new FileProcess());
 
             //設置裝飾的順序
-            factory.SetProcess(new ZipProcess() { FileName = "1.txt", PassWord = "1234567" })
-                   .SetProcess(new AESCrypProcess());
+            factory.SetProcess(new AESCrypProcess())
+                   .SetProcess(new ZipProcess() { ZipFileName = "susu.zip", PassWord = "123456" });
 
             IProcess process = factory.GetProcess();
 
-            byte[] data_buffer = Encoding.UTF8.GetBytes(fileRequestEntity.Content);
-            process.Write(fileRequestEntity.FilePath, data_buffer);
-
-            byte[] buffer = process.Read(fileRequestEntity.FilePath);
-            Console.WriteLine(Encoding.UTF8.GetString(buffer));
+            process.Write(fileRequestEntity.FilePath, fileRequestEntity.Content);
 
             return this.Ok();
         }

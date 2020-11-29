@@ -18,26 +18,24 @@ namespace DesignPattern.Decorator
             aes.IV = Encoding.UTF8.GetBytes(AESIV);
         }
 
-        public override void Write(string path, byte[] buffer)
+        public override void Write(string path, string content)
         {
-            byte[] outputBytes = EncryptData(buffer);
-            _process.Write(path, outputBytes);
+            _process.Write(path, content);
+
+            byte[] outputBytes = EncryptData(path);
+            File.WriteAllBytes(path, outputBytes);
         }
 
-        public override byte[] Read(string path)
+        private byte[] EncryptData(string writePath)
         {
-            byte[] encryptBytes = _process.Read(path);
-            return DecryptData(encryptBytes);
-        }
+            byte[] bytes = File.ReadAllBytes(writePath);
 
-        private byte[] EncryptData(byte[] data)
-        {
             byte[] outputBytes = null;
             using (MemoryStream memoryStream = new MemoryStream())
             {
                 using (CryptoStream encryptStream = new CryptoStream(memoryStream, aes.CreateEncryptor(), CryptoStreamMode.Write))
                 {
-                    MemoryStream inputStream = new MemoryStream(data);
+                    MemoryStream inputStream = new MemoryStream(bytes);
                     inputStream.CopyTo(encryptStream);
                     encryptStream.FlushFinalBlock();
                     outputBytes = memoryStream.ToArray();
@@ -47,8 +45,10 @@ namespace DesignPattern.Decorator
             return outputBytes;
         }
 
-        private byte[] DecryptData(byte[] encryptBytes)
+        private byte[] DecryptData(string readPath)
         {
+            byte[] encryptBytes = File.ReadAllBytes(readPath);
+
             byte[] outputBytes = null;
             using (MemoryStream memoryStream = new MemoryStream(encryptBytes))
             {

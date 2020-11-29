@@ -1,8 +1,7 @@
-﻿using ICSharpCode.SharpZipLib.Core;
-using ICSharpCode.SharpZipLib.Zip;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,65 +11,59 @@ namespace DesignPattern.Decorator
     {
         public string PassWord { get; set; }
 
-        public string FileName { get; set; }
+        public string ZipFileName { get; set; }
 
-        public override void Write(string writePath, byte[] buffer)
+        public override void Write(string writePath, string content)
         {
-            byte[] outputBytes = ZipWriter(buffer);
-            _process.Write(writePath, outputBytes);
+            _process.Write(writePath, content);
+
+            this.ZipWriter(writePath);
         }
 
-        public override byte[] Read(string path)
+        private void ZipWriter(string writePath)
         {
-            byte[] buffer = _process.Read(path);
-            return ZipReader(path, buffer);
-        }
+            var directory = Path.GetDirectoryName(writePath);
+            var zipFilePath = Path.Combine(directory, this.ZipFileName);
 
-        private byte[] ZipWriter(byte[] buffer)
-        {
-            using (MemoryStream outputMemStream = new MemoryStream())
-            using (ZipOutputStream zipStream = new ZipOutputStream(outputMemStream))
-            using (MemoryStream memStreamIn = new MemoryStream(buffer))
+            using (var fs = new FileStream(zipFilePath, FileMode.OpenOrCreate))
             {
-                zipStream.SetLevel(9);
-
-                ZipEntry newEntry = new ZipEntry(FileName);
-                newEntry.DateTime = DateTime.Now;
-                zipStream.Password = PassWord;
-                zipStream.PutNextEntry(newEntry);
-
-                StreamUtils.Copy(memStreamIn, zipStream, new byte[4096]);//將zip流搬到memoryStream中
-                zipStream.CloseEntry();
-
-                zipStream.IsStreamOwner = false;
-                zipStream.Close();
-
-                return outputMemStream.ToArray();
-            }
-        }
-
-        private byte[] ZipReader(string filePath, byte[] buffer)
-        {
-            byte[] zipBuffer = default(byte[]);
-            using (MemoryStream memoryStream = new MemoryStream(buffer))
-            {
-                memoryStream.Seek(0, SeekOrigin.Begin);
-                var zip = new ZipFile(memoryStream);
-                zip.Password = PassWord;
-                using (MemoryStream streamWriter = new MemoryStream())
+                using (ZipArchive zipArchive = new ZipArchive(fs, ZipArchiveMode.Create))
                 {
-                    byte[] bufferReader = new byte[4096];
-                    var file = zip.GetEntry(FileName); //設置要去得的檔名
-                                                       //如果有檔案
-                    if (file != null)
+                    var fileName = Path.GetFileName(writePath);
+
+                    var zipArchiveEntry = zipArchive.CreateEntry(fileName);
+                    using (var zipStream = zipArchiveEntry.Open())
                     {
-                        var zipStream = zip.GetInputStream(file);
-                        StreamUtils.Copy(zipStream, streamWriter, bufferReader);
-                        zipBuffer = streamWriter.ToArray();
+                        byte[] bytes = File.ReadAllBytes(writePath);
+                        zipStream.Write(bytes, 0, bytes.Length);
+
+                        zipStream.Close();
                     }
                 }
             }
-            return zipBuffer;
+        }
+
+        private string[] ZipReader(string filePath)
+        {
+            var result = new List<string>();
+
+            using (var fs = new FileStream(filePath, FileMode.Open))
+            {
+                using (ZipArchive zipArchive = new ZipArchive(fs, ZipArchiveMode.Read))
+                {
+                    foreach (ZipArchiveEntry zipArchiveEntry in zipArchive.Entries)
+                    {
+                        var pathRoot = Path.GetPathRoot(filePath);
+
+                        string tempFilePath = Path.Combine(pathRoot, zipArchiveEntry.FullName);
+                        zipArchiveEntry.ExtractToFile(tempFilePath);
+
+                        result.Add(tempFilePath);
+                    }
+                }
+            }
+
+            return result.ToArray();
         }
     }
 }
