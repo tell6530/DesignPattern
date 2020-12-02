@@ -53,9 +53,9 @@ namespace DesignPattern.Decorator
                 {
                     foreach (ZipArchiveEntry zipArchiveEntry in zipArchive.Entries)
                     {
-                        var pathRoot = Path.GetPathRoot(filePath);
+                        var directory = Path.GetDirectoryName(filePath);
 
-                        string tempFilePath = Path.Combine(pathRoot, zipArchiveEntry.FullName);
+                        string tempFilePath = Path.Combine(directory, zipArchiveEntry.FullName);
                         zipArchiveEntry.ExtractToFile(tempFilePath);
 
                         result.Add(tempFilePath);
