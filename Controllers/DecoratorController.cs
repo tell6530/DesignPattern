@@ -15,7 +15,7 @@ namespace DesignPattern.Controllers
             DecoratorFactory factory = new DecoratorFactory(new FileProcess());
 
             //設置裝飾的順序
-            factory.SetProcess(new ZipProcess() { ZipFileName = "1.txt", PassWord = "1234567" });
+            factory.SetProcess(new ZipProcess() { ZipFileName = "susu.zip", PassWord = "1234567" });
 
             IProcess process = factory.GetProcess();
 
