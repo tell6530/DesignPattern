@@ -14,8 +14,6 @@ namespace DesignPattern.Controllers
         [HttpGet]
         public IActionResult GetState(int clockHour)
         {
-            //var clockHourList = clockHours.Split(',');
-
             var stateContext = new StateContext(new MorningState(clockHour));
 
             stateContext.Request();
